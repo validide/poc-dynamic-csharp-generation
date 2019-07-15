@@ -3,7 +3,6 @@ using Microsoft.CSharp;
 using System;
 using System.CodeDom.Compiler;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CSharpWrapper
@@ -45,9 +44,12 @@ namespace CSharpWrapper
             {
                 var compilationResult = _compiler.CompileAssemblyFromSource(compilerParameters, code);
                 result = new CompilerResult();
-                if (result.Errors.Count > 0)
+                if (compilationResult.Errors.Count > 0)
                 {
-                    result.Errors.AddRange(result.Errors.Select(s=>s.ToString()));
+                    foreach (var compilationError in compilationResult.Errors)
+                    {
+                        result.Errors.Add(compilationError.ToString());
+                    }
                 }
                 else
                 {

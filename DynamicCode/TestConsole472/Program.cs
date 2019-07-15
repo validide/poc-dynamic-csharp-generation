@@ -1,12 +1,13 @@
-﻿using Contracts;
-using RoslynCompilerWrapper;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Contracts;
+using CSharpWrapper;
+using RoslynCompilerWrapper;
 
-namespace TestConsole
+namespace TestConsole472
 {
     internal class Program
     {
@@ -24,22 +25,22 @@ namespace TestConsole
 
             var compilers = new Compiler[]
             {
-                //new CSharpCompiler(new CompilerOptions
-                //{
-                //    OutputType = OutputType.DynamicLinkLibrary,
-                //    AssemblyName = AssemblyName,
-                //    TemporaryCompilationLocation = tempBuildLocation,
-                //    ReferencesAssemblyLocations = null
-                //}),
+                new CSharpCompiler(new CompilerOptions
+                {
+                    OutputType = OutputType.DynamicLinkLibrary,
+                    AssemblyName = AssemblyName,
+                    TemporaryCompilationLocation = tempBuildLocation,
+                    ReferencesAssemblyLocations = null
+                }),
                 new RoslynCompiler(new CompilerOptions
                 {
                     OutputType = OutputType.DynamicLinkLibrary,
                     AssemblyName = AssemblyName,
                     ReferencesAssemblyLocations = new[]
                         {
-                            typeof(object).Assembly.Location,
-                            typeof(Console).Assembly.Location,
-                            typeof(System.Runtime.AssemblyTargetedPatchBandAttribute).Assembly.Location
+                            typeof(object).Assembly.Location
+                            //typeof(Console).Assembly.Location,
+                            //typeof(System.Runtime.AssemblyTargetedPatchBandAttribute).Assembly.Location
                         }
                         .Distinct()
                         .ToArray()
@@ -47,7 +48,7 @@ namespace TestConsole
             };
 
 
-            foreach (var code in new[] {InvalidCode, ValidCode})
+            foreach (var code in new[] { InvalidCode, ValidCode })
             {
                 Console.WriteLine("\n\nCompiling the following code:");
                 Console.WriteLine(code);
@@ -74,6 +75,7 @@ namespace TestConsole
                                 "arg3"
                             }
                         };
+                        // ReSharper disable once PossibleNullReferenceException
                         classDefinition.GetMethod("Run").Invoke(instance, argsArray);
                     }
                     else
@@ -103,7 +105,7 @@ namespace DynamicTestNamespace
             Console.WriteLine(""Hello World!"");
             foreach (var arg in args)
             {
-                Console.WriteLine($""\t {arg}"");
+                Console.WriteLine(""\t {0}"", arg); //string interpolation is not supported
             }
         }
     }
